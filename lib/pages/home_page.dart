@@ -1,3 +1,4 @@
+import 'package:coding_chal/model/country.dart';
 import 'package:coding_chal/provider/country_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,8 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,6 +55,54 @@ class _HomePageState extends State<HomePage> {
                 child: const Text("Search"),
               ),
             ],
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Selector<CountryProvider, bool>(
+            shouldRebuild: (prev, next) => prev != next,
+            selector: (context, countryProvider) =>
+                countryProvider.fetchingCountry,
+            builder: (context, fetchingCountry, _) {
+              if (fetchingCountry) {
+                return Image.asset(
+                  'assets/gllobe.gif',
+                  height: 150,
+                  width: 150,
+                );
+              } else {
+                return Selector<CountryProvider, List<Country>?>(
+                  shouldRebuild: (prev, next) => prev != next,
+                  selector: (context, countryProvider) =>
+                      countryProvider.countries,
+                  builder: (context, countries, _) {
+                    if (countries == null) {
+                      return const SizedBox.shrink();
+                    } else if (countries.isEmpty) {
+                      return const Center(
+                        child: Text("No country found"),
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          const Text(
+                            "Probabily you are from",
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            children: countries
+                                .map((e) => Chip(label: Text(e.countryCode)))
+                                .toList(),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                );
+              }
+            },
           ),
         ],
       ),

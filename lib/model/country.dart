@@ -7,7 +7,7 @@ class Country {
   factory Country.fromJson(Map<String, dynamic> json) {
     return Country(
       json['country_id'],
-      json['probability'],
+      json['probability']?.toDouble(),
     );
   }
 }

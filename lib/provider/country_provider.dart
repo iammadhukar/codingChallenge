@@ -17,8 +17,6 @@ class CountryProvider extends ChangeNotifier {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
     var response = await http.get(uri, headers: header);
-    if (response.statusCode == 200) {
-      print("Success----");
-    }
+    if (response.statusCode == 200) {}
   }
 }
